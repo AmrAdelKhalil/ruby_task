@@ -17,4 +17,9 @@
 
 #TASK2
 
+**INSTRUCTIONS**
 
+* You will find a file under `lib/project_algorithms` called `pricing_algorithm`
+* I considered that both `brand` and `product_database` or objects like ActiveRecord objects, but `price_reference` is just an integer.
+* I consider that this module will be included to another class that responsible for calculating `calculate_price` method.
+* I needed to test this file but I got no models so I made a new version that could be tested under the `lib/project_algorithms/test` called `pricing_algorithm_test`.
