@@ -5,9 +5,9 @@
 <script>
   var number_of_attempts = 0;
   function verify_email() {
-      if (number_of_attempts < 5){
+      if (number_of_attempts <= 5){
           $.ajax({
-              url: '/users/verify_email?' + 'email=' + $('#email').val(),
+              url: '/users/verify_email?' + 'email=' + $('#email').val() + '&number_of_attempts=' + number_of_attempts,
               dataType: 'json',
               success: function (response) {
                   if(response['format_valid'] == true){
@@ -18,6 +18,10 @@
                       $('#respond').text(str);
                   }
                   number_of_attempts = 0;
+              },
+              error: function(response){
+                  response = JSON.parse(response.responseText);
+                  $('#respond').text(response['error']['info']);
               }
           });
           number_of_attempts++;
