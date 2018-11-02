@@ -1,0 +1,32 @@
+<input id="email" type="email" placeholder="enter your email">
+<input type="button" value="Verify" onclick="verify_email()"><br/>
+<p id="respond"></p>
+
+<script>
+  var number_of_attempts = 0;
+  function verify_email() {
+      if (number_of_attempts <= 5){
+          $.ajax({
+              url: '/users/verify_email?' + 'email=' + $('#email').val() + '&number_of_attempts=' + number_of_attempts,
+              dataType: 'json',
+              success: function (response) {
+                  if(response['format_valid'] == true){
+                      $('#respond').text('Your email has a valid format');
+                  }else{
+                      str = 'The format of your email ('+ response['email'] + ') is not valid';
+                      if(response['did_you_mean'].length != 0) str +=', Did you mean ('+ response['did_you_mean']+')';
+                      $('#respond').text(str);
+                  }
+                  number_of_attempts = 0;
+              },
+              error: function(response){
+                  response = JSON.parse(response.responseText);
+                  $('#respond').text(response['error']['info']);
+              }
+          });
+          number_of_attempts++;
+      }else{
+          $('#respond').text('You have exceeded the limited number of sending verifying requests');
+      }
+  }
+</script>
