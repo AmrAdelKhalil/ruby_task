@@ -1,3 +1,4 @@
+require 'rest-client'
 module ThirdParties
   module MailBox
     BASE_URL = 'http://apilayer.net/api/check'.freeze

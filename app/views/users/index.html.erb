@@ -4,29 +4,39 @@
 
 <script>
   var number_of_attempts = 0;
+
   function verify_email() {
-      if (number_of_attempts <= 5){
-          $.ajax({
-              url: '/users/verify_email?' + 'email=' + $('#email').val() + '&number_of_attempts=' + number_of_attempts,
-              dataType: 'json',
-              success: function (response) {
-                  if(response['format_valid'] == true){
-                      $('#respond').text('Your email has a valid format');
-                  }else{
-                      str = 'The format of your email ('+ response['email'] + ') is not valid';
-                      if(response['did_you_mean'].length != 0) str +=', Did you mean ('+ response['did_you_mean']+')';
-                      $('#respond').text(str);
-                  }
-                  number_of_attempts = 0;
-              },
-              error: function(response){
-                  response = JSON.parse(response.responseText);
-                  $('#respond').text(response['error']['info']);
-              }
-          });
-          number_of_attempts++;
+      if(number_of_attempts <= 5){
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                success(this.responseText);
+            } else if (this.readyState == 4 && this.status == 404) {
+                error(this.responseText)
+            }
+        };
+        xhttp.open("GET", '/users/verify_email?' + 'email=' + document.getElementById('email').value + '&number_of_attempts=' + number_of_attempts + '.json', true);
+        xhttp.send();
+        number_of_attempts++;
       }else{
-          $('#respond').text('You have exceeded the limited number of sending verifying requests');
+        document.getElementById('respond').innerHTML = 'You have exceeded the limited number of sending verifying requests';
       }
+  }
+  function success(response){
+      console.log(response);
+      response = JSON.parse(response);
+      if (response['format_valid'] == true) {
+          document.getElementById('respond').innerHTML = 'Your email has a valid format';
+      } else {
+          str = 'The format of your email (' + response['email'] + ') is not valid';
+          if (response['did_you_mean'].length != 0) str += ', Did you mean (' + response['did_you_mean'] + ')';
+          document.getElementById('respond').innerHTML = str;
+      }
+      number_of_attempts = 0;
+  }
+  function error(response){
+      response = JSON.parse(response);
+      document.getElementById('respond').innerHTML = response['error']['info'];
+      number_of_attempts = 0;
   }
 </script>
