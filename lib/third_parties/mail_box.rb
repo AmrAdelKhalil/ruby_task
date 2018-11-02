@@ -1,7 +1,7 @@
 module ThirdParties
   module MailBox
     BASE_URL = 'http://apilayer.net/api/check'.freeze
-    OPTIONAL_PARAMS = {access_key: '7f1b7cb904e555ccc4ff59a94a22e6f7', stmp: 1, format: 1, callback: nil, email: nil}
+    OPTIONAL_PARAMS = {access_key: Rails.application.credentials.MAIL_BOX_ACCESS_KEY, stmp: 1, format: 1, callback: nil, email: nil}
     private
 
     def check(optional_params)
